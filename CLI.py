@@ -1,7 +1,7 @@
 import mysql.connector
 import random
 
-cnx = mysql.connector.connect(user = 'root', password = 'root', host = '127.0.0.1', database = 'retadn2',autocommit=True)
+cnx = mysql.connector.connect(user = 'root', password = '12345', host = '127.0.0.1', database = 'retad1',autocommit=True)
 cursor = cnx.cursor()
 
 orderid=0
@@ -200,7 +200,6 @@ def admin_menu():
         admin_menu()
     elif choice == "10":
         edit_wallet(0)
-    
 
 def admin_login():
     login=int(input("Enter admin Login Number"))
@@ -292,10 +291,21 @@ def add_to_cart(cust_id):
         if(str(cust_id)==str(list({row[1]})[0]) and prod_id==str(list({row[2]})[0])):
             preqty=int(list({row[3]})[0])
             qty=qty+preqty
-            upd="UPDATE CartItems SET quantity="+str(qty)+" WHERE cart_index="+str(cust_id)+" AND prod_id="+str(prod_id)+";"
-            cursor.execute(upd)
-            upd=1
-            break
+            inv_qty="SELECT * FROM inventory WHERE prod_id="+str(prod_id)+";"
+            cursor.execute(inv_qty)
+            results2=cursor.fetchall()
+            invqt=0
+            for row2 in results2:
+                invqt=int(list({row2[1]})[0])
+                
+            if(invqt<qty):
+                print(f"Only {int(list({row2[1]})[0])} left in stock! Try again")
+                add_to_cart(cust_id)
+            else:    
+                upd="UPDATE CartItems SET quantity="+str(qty)+" WHERE cart_index="+str(cust_id)+" AND prod_id="+str(prod_id)+";"
+                cursor.execute(upd)
+                upd=1
+                break
     if(upd==0):
         ins="INSERT INTO `CartItems` (`cart_index`, `prod_id`, `quantity`) VALUES ("+str(cust_id)+", "+str(prod_id)+", "+str(qty)+");"
         cursor.execute(ins)
@@ -365,14 +375,16 @@ def remove_from_cart(cust_id):
     results = cursor.fetchall()
     preqty=0
     for row in results:
-        if(str(cust_id)==list({row[1]})[0] and prod_id==str(list({row[2]})[0])):
+        print("Checking")
+        if(str(cust_id)==str(list({row[1]})[0]) and prod_id==str(list({row[2]})[0])):
             preqty=int(list({row[3]})[0])
             if(preqty<qty):
                 print("Invalid Quantity")
             else:
                 preqty=preqty-qty
-                upd="UPDATE CartItems SET quantity="+str(preqty)+"WHERE cart_index="+str(cust_id)+" and prod_id="+str(prod_id)+";"
+                upd="UPDATE CartItems SET quantity="+str(preqty)+" WHERE cart_index="+str(cust_id)+" and prod_id="+str(prod_id)+";"
                 cursor.execute(upd)
+                print("Executed")
                 break
 
 
@@ -470,10 +482,13 @@ def cust_menu(cust_id):
         add_to_cart(cust_id)
     elif choice == "3":
         remove_from_cart(cust_id)
+        cust_menu(cust_id)
     elif choice == "4":
         apply_coupon(cust_id)
+        cust_menu(cust_id)
     elif choice == "5":
         place_order(cust_id)
+        cust_menu(cust_id)
     elif choice == "6":
         main_fun()
     else:
