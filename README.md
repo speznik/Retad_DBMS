@@ -32,3 +32,4 @@
 
 3. **Logout**: The user can log out of their account using this option. As soon as this option is chosen, the programme logs the user out and shows a success message.
 
+4. **Exit**: This option allows the user to exit the program.
