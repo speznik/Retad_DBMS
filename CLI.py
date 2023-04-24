@@ -1,7 +1,7 @@
 import mysql.connector
 import random
 
-cnx = mysql.connector.connect(user = 'root', password = '12345', host = '127.0.0.1', database = 'retad1',autocommit=True)
+cnx = mysql.connector.connect(user = 'root', password = 'root', host = '127.0.0.1', database = 'retadn2',autocommit=True)
 cursor = cnx.cursor()
 
 orderid=0
@@ -469,8 +469,9 @@ def cust_menu(cust_id):
         2: "Add products to cart",
         3: "Remove products from cart",
         4: "Apply coupons",
-        5: "Checkout",
-        6: "Logout"
+        5: "View previous orders",
+        6: "Checkout",
+        7: "Logout",
     }
     for key, value in menu.items():
         print(f"{key}. {value}")
@@ -487,15 +488,25 @@ def cust_menu(cust_id):
         apply_coupon(cust_id)
         cust_menu(cust_id)
     elif choice == "5":
-        place_order(cust_id)
+        past_orders(cust_id)
         cust_menu(cust_id)
     elif choice == "6":
+        place_order(cust_id)
+        cust_menu(cust_id)
+    elif choice == "7":
         main_fun()
     else:
         print("Invalid choice. Please enter a valid input (1-6)")
         cust_menu(cust_id)
 
-
+def past_orders(cust_id):
+    query = "SELECT * FROM ordera WHERE ordera.cart_index = "+str(cust_id)+";"
+    cursor.execute(query)
+    results = cursor.fetchall()
+    print("Order ID\tCustomer ID\tOrder Time\tFinal Value\tShipping Address")
+    for row in results:
+        print(f"{row[0]}\t{row[1]}\t{row[2]}\t{row[3]}\t{row[4]}")
+        
 def view_shipper():
     query = "SELECT * FROM shipper;"
     cursor.execute(query)
