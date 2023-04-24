@@ -158,7 +158,7 @@ def edit_wallet(a):
     cursor.execute(query)
     query2 = "SELECT customer.cust_id, customer.cust_wallet FROM customer WHERE cust_id = "+str(custID)+";"
     cursor.execute(query)
-    print("New Balance: ")
+    print("New Balance: "+str(newBal))
     admin_menu()
     
 
@@ -173,7 +173,8 @@ def admin_menu():
     7: "Add Employees",
     8: "Remove Employee",
     9: "View Shipper Details",
-    10: "Exit"
+    10: "Edit Wallet",
+    11: "Exit"
     }
     for key, value in menu.items():
         print(f"{key}. {value}")
@@ -197,6 +198,8 @@ def admin_menu():
     elif choice == "9":
         view_shipper()
         admin_menu()
+    elif choice == "10":
+        edit_wallet(0)
     
 
 def admin_login():
@@ -407,18 +410,31 @@ def place_order(cust_id):
         quer3="SELECT * FROM customer WHERE customer.cust_id="+str(cust_id)+";"
         cursor.execute(quer3)
         results = cursor.fetchall()
+        flag = 0
         custAddress = "a"
         for row in results:
             custAddress=str(list({row[4]})[0])
         yesno=input("Continue ?(Y/n)")
         if(yesno=="Y" or yesno=="y"):
+            cursor.execute(quer3)
+            results=cursor.fetchall()
+            for row in results:
+                walletBal = list({row[7]})[0]
             cursor.execute(quer2)
             results=cursor.fetchall()
             for row in results:
-                print("Did this here")
-                ord_ins="INSERT INTO `ordera` (`cart_index`, `order_time`, `fin_val`, `shipping_address`) VALUES ("+str(cust_id)+", now(), '"+str(list({row[2]})[0])+"', 'Molestiae quia laudantium fuga.');"
-                orderid+=1
-                cursor.execute(ord_ins)
+                if(walletBal>=list({row[2]})[0]):
+                    ord_ins="INSERT INTO `ordera` (`cart_index`, `order_time`, `fin_val`, `shipping_address`) VALUES ("+str(cust_id)+", now(), '"+str(list({row[2]})[0])+"', 'Molestiae quia laudantium fuga.');"
+                    orderid+=1
+                    cursor.execute(ord_ins)
+                    print("Ordera table updated")
+                    newBal = walletBal-list({row[2]})[0]
+                    update_wallet = "UPDATE customer SET cust_wallet ="+str(newBal)+" WHERE customer.cust_id = "+str(cust_id)+";"
+                    cusor.execute(update_wallet)
+                    print("Your new wallet balance is: ", newBal)
+                else:
+                    print("Insufficient wallet balance!")
+                    cust_menu(cust_id)
             print("Reached Here")
             cursor.execute(quer)
             print("Reached here 2")
@@ -432,6 +448,7 @@ def place_order(cust_id):
             cursor.execute(finv)
             clr="DELETE FROM CartItems WHERE CartItems.cart_index="+str(cust_id)+";"
             cursor.execute(clr)
+            print("Order Placed Successfully!")
 
 
 def cust_menu(cust_id):
