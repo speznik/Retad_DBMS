@@ -13,4 +13,22 @@
 
 
 ### Employee Menu
-1. **Place an order**: 
+1. **Place an order**: This option allows the employee to place an order for a product. The programme prompts the worker to enter the product ID and amount after selection. After adding the order to the database, the programme shows a success message.
+
+2. **View orders**: This option allows the employee to view all the orders placed. Upon selection, the programme displays all orders in table format after retrieving them from the database.
+
+3. **Update order status**: This option allows the employee to update the status of an order. When this option is chosen, the programme asks the worker to input the order ID and the updated status. The programme then displays a success message and updates the order status in the database.
+
+4. **View Cart**: This option allows the customer to view all the products added to the cart. When chosen, the programme pulls every item from the shopping basket and arranges it in a table.
+
+5. **Place an order**:  This option allows the customer to place an order for the products in the cart. The customer is asked to confirm the order when the option is selected by the programme. The programme then uploads the order to the database and displays a success message if the customer confirms the order.
+
+6. **View order history**: This option allows the customer to view their order history. When selected, the program prompts the customer to login. After the customer logs in, the program retrieves all the orders placed by the customer and displays them in a table format.
+
+### Common Funtionalities
+1. **Login**: The user can log in as an administrator, an employee, or a customer using this option. The programme asks the user to input their login and password when they make their choice. The programme logs the user in and displays a success message if the credentials are valid. The programme displays an error notice and asks the user to try again if the credentials are entered incorrectly.
+
+2. **Register**: The user can sign up to become a customer using this option. The user must input their name, username, password, email address, and phone number when the option is selected by the user. The customer is then added to the database, and a success message is then shown.
+
+3. **Logout**: The user can log out of their account using this option. As soon as this option is chosen, the programme logs the user out and shows a success message.
+
