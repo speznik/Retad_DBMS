@@ -1,5 +1,3 @@
-### Retad_DBMS
-
 ### Admin Menu
 1. **Add a new product**: Using this option, the admin can update the database with a new product. The programme prompts the administrator to enter the product name, category, price, and quantity after selection. The new product is then added to the database, and the programme shows a success message.
 
